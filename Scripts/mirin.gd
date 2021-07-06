@@ -134,7 +134,6 @@ func _template_response(result, response_code, headers, body):
 			http.connect("request_completed", self, "_file_downloaded", [item.path])
 			if item.download_url:
 				http.request(item.download_url, [], HTTPClient.METHOD_GET)
-
 	mod_type.set("disabled", false)
 	mod_name.set_editable(true)
 	mod_perc.set_editable(true)
@@ -142,9 +141,11 @@ func _template_response(result, response_code, headers, body):
 
 func _file_downloaded(result, response_code, headers, body, file_dir):
 	var f = File.new()
-	f.open(proj_path + '/' + file_dir, File.WRITE)
+	f.open(proj_path + '/' + file_dir, File.WRITE_READ)
 	f.store_buffer(body)
 	f.close()
+	if file_dir == 'lua/mods.xml':
+		open_file(file_dir)
 
 func type_select(idx):
 	match mod_type.get_item_text(idx):
@@ -179,19 +180,18 @@ func _on_insert():
 func insert_mod(type: String, start: String, length: String, easefunc: String, percent: String, mod: String):
 	var modline: String
 	if type != 'set':
-		modline = '%s {%s, %s, %s}' % [type, start, percent, mod]
-	else:
 		modline = '%s {%s, %s, %s, %s, %s}' % [type, start, length, easefunc, percent, mod]
-	mods.insert(-1, '\t' + modline + '\n')
+	else:
+		modline = '%s {%s, %s, %s}' % [type, start, percent, mod]
+	mods.append('\t' + modline)
 
 func insert_actor(actortype: String, actorname: String):
 	var actorline: String
 	actorline = ("""
 	<%s
 		Name = %s
-	/>
-""") % [actortype, actorname]
-	actors.insert(-1, actorline)
+	/>""") % [actortype, actorname]
+	actors.append(actorline)
 
 func open_file(file):
 	var f = File.new()
@@ -200,10 +200,24 @@ func open_file(file):
 	f.close()
 
 func save_to_file(file):
-	var f = File.new()
-	f.open(proj_path + '/' + file, File.WRITE)
-	f.store_string(modfile)
-	f.close()
+	var split_file: Array = modfile.split('\n')
+	print(split_file.find('end)"'))
+	var mod_index = split_file.find('end)"') - 2
+	var actor_index = split_file.find('</children>')
+	for modline in mods:
+		split_file.insert(mod_index, modline)
+		mod_index += 1
+	for actorline in actors:
+		split_file.insert(actor_index, actorline)
+		actor_index += 1
+	var joined_file: PoolStringArray = PoolStringArray(split_file)
+	modfile = joined_file.join('\n')
+	print(modfile)
+	
+#	var f = File.new()
+#	f.open(proj_path + '/' + file, File.WRITE)
+#	f.store_string(modfile)
+#	f.close()
 
 func print_string(string: String):
 	for letter in string:
