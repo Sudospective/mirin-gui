@@ -1,7 +1,7 @@
 extends Node
 
 var window_size = Vector2(1280, 720)
-var window_title = 'Mirin Template Plugin Manager'
+var window_title = 'Mirin Template GUI Editor'
 
 
 func _ready():

@@ -171,7 +171,7 @@ func _on_insert():
 	var m_length: String = '0'
 	var m_ease: String = 'instant'
 	var m_perc: String = mod_perc.get_line_edit().get_text()
-	var m_name: String = mod_name.get_text()
+	var m_name: String = '\'' + mod_name.get_text() + '\''
 	if cur_panel != set_panel:
 		m_length = cur_panel.get_node("ModLength").get_line_edit().get_text()
 		m_ease = cur_panel.get_node("ModEase").get_item_text(cur_panel.get_node("ModEase").get_selected())
