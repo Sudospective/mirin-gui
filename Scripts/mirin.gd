@@ -1,5 +1,7 @@
 extends Control
 
+const TEMPLATE_URL: String = 'https://api.github.com/repos/xerool/notitg-mirin'
+
 var font: DynamicFont = DynamicFont.new()
 var label: Label = Label.new()
 var color: Color = Color.white
@@ -13,36 +15,10 @@ var styles: Dictionary = {
 }
 var browse_type: String = ''
 
-var mods: Dictionary = {
-'header': '<Mods Type = "ActorFrame" LoadCommand = "%xero(function(self)',
-'body': (
-"""
-	for pn = 1, 2 do
-		setupJudgeProxy(PJ[pn], P[pn]:GetChild('Judgment'), pn)
-		setupJudgeProxy(PC[pn], P[pn]:GetChild('Combo'), pn)
-	end
-	for pn = 1, #PP do
-		PP[pn]:SetTarget(P[pn])
-		P[pn]:hidden(1)
-	end
-\n"""
-),
-'footer': '\nend)">\n'
-}
-var actors: Dictionary = {
-'header': '<children>',
-'body': (
-"""
-	<Layer Type = "ActorProxy" Name = "PP[1]" />
-	<Layer Type = "ActorProxy" Name = "PP[2]" />
-	<Layer Type = "ActorProxy" Name = "PC[1]" />
-	<Layer Type = "ActorProxy" Name = "PC[2]" />
-	<Layer Type = "ActorProxy" Name = "PJ[1]" />
-	<Layer Type = "ActorProxy" Name = "PJ[2]" />
-"""
-),
-'footer': '</children></Mods>'
-}
+var mods: Array
+var actors: Array
+
+var modfile: String
 
 onready var btn_new: Button = get_node("Workspace/ButtonNew")
 onready var btn_open: Button = get_node("Workspace/ButtonOpen")
@@ -77,18 +53,19 @@ func draw_circle_arc(center, radius, angle_from, angle_to, color):
 		draw_line(points_arc[index_point], points_arc[index_point + 1], color)
 
 func _ready():
-	font.font_data = styles.reg
-	font.size = 64
-	aux = 0
 	btn_new.connect("pressed", self, "folder_browse", ['new'])
 	btn_open.connect("pressed", self, "folder_browse", ['open'])
 	file_browser.connect("dir_selected", self, "folder_select")
+	mod_type.connect("item_selected", self, "type_select")
+	btn_insert.connect("pressed", self, "_on_insert")
+	
+	font.font_data = styles.reg
+	font.size = 64
+	aux = 0
 	file_browser.set_access(FileDialog.ACCESS_FILESYSTEM)
 	mod_type.add_item('Set')
 	mod_type.add_item('Ease')
 	mod_type.add_item('Add')
-	mod_type.connect("item_selected", self, "type_select")
-	btn_insert.connect("pressed", self, "_on_insert")
 	for item in [
 		'instant',
 		'linear',
@@ -118,17 +95,56 @@ func folder_browse(mode):
 	browse_type = mode
 
 func folder_select(path):
+	set_panel.show()
+	proj_path = path
+	if browse_type == 'new':
+		for file_dir in ['', 'lua', 'template']:
+			var http = HTTPRequest.new()
+			add_child(http)
+			http.connect("request_completed", self, "_template_response")
+			var headers = [
+				'Accept: application/vnd.github.v3+json'
+			]
+			http.request(TEMPLATE_URL + '/contents/' + file_dir, headers, HTTPClient.METHOD_GET)
+	else:
+		open_file('lua/mods.xml')
+		mod_type.set("disabled", false)
+		mod_name.set_editable(true)
+		mod_perc.set_editable(true)
+		btn_insert.set("disabled", false)
+
+func _template_response(result, response_code, headers, body):
+	if response_code != HTTPClient.RESPONSE_OK:
+		push_error('Failed to download template: ' + str(response_code))
+		return
+	var res: String = body.get_string_from_utf8()
+	if !res:
+		push_error('Unable to get HTTP data from repository response.')
+		return
+	var data: Array = parse_json(res)
+	if data:
+		var template_tree: Dictionary
+		var dir = Directory.new()
+		dir.open(proj_path)
+		dir.make_dir('lua')
+		dir.make_dir('template')
+		for item in data:
+			var http = HTTPRequest.new()
+			add_child(http)
+			http.connect("request_completed", self, "_file_downloaded", [item.path])
+			if item.download_url:
+				http.request(item.download_url, [], HTTPClient.METHOD_GET)
+
 	mod_type.set("disabled", false)
 	mod_name.set_editable(true)
 	mod_perc.set_editable(true)
 	btn_insert.set("disabled", false)
-	set_panel.show()
-	proj_path = path
-	match browse_type:
-		'new':
-			pass
-		'open':
-			pass
+
+func _file_downloaded(result, response_code, headers, body, file_dir):
+	var f = File.new()
+	f.open(proj_path + '/' + file_dir, File.WRITE)
+	f.store_buffer(body)
+	f.close()
 
 func type_select(idx):
 	match mod_type.get_item_text(idx):
@@ -160,30 +176,33 @@ func _on_insert():
 		m_ease = cur_panel.get_node("ModEase").get_item_text(cur_panel.get_node("ModEase").get_selected())
 	insert_mod(m_type, m_start, m_length, m_ease, m_perc, m_name)
 
-func insert_mod(type, start, length, easefunc, percent, mod):
+func insert_mod(type: String, start: String, length: String, easefunc: String, percent: String, mod: String):
 	var modline: String
 	if type != 'set':
-		modline = (
-			type + ' {' +
-			start + ', ' +
-			length + ', ' +
-			easefunc + ', ' +
-			percent + ', ' +
-			'\'' + mod + '\'}'
-		)
+		modline = '%s {%s, %s, %s}' % [type, start, percent, mod]
 	else:
-		modline = (
-			type + ' {' +
-			start + ', ' +
-			percent + ', ' +
-			'\'' + mod + '\'}'
-		)
-	mods.body += '\t' + modline + '\n'
+		modline = '%s {%s, %s, %s, %s, %s}' % [type, start, length, easefunc, percent, mod]
+	mods.insert(-1, '\t' + modline + '\n')
 
-func save_to_file(file, data):
+func insert_actor(actortype: String, actorname: String):
+	var actorline: String
+	actorline = ("""
+	<%s
+		Name = %s
+	/>
+""") % [actortype, actorname]
+	actors.insert(-1, actorline)
+
+func open_file(file):
+	var f = File.new()
+	f.open(proj_path + '/' + file, File.READ)
+	modfile = f.get_as_text()
+	f.close()
+
+func save_to_file(file):
 	var f = File.new()
 	f.open(proj_path + '/' + file, File.WRITE)
-	f.store_string(data)
+	f.store_string(modfile)
 	f.close()
 
 func print_string(string: String):
@@ -202,18 +221,7 @@ func _process(delta):
 
 func _input(event):
 	if proj_path != '' and event.is_action_pressed("save_to_file"):
-		var compiled_mods = (
-			mods.header +
-			mods.body +
-			mods.footer
-		)
-		var compiled_actors = (
-			actors.header +
-			actors.body +
-			actors.footer
-		)
-		var mods_xml = compiled_mods + compiled_actors
-		save_to_file('mirin-gui.xml', mods_xml)
+		save_to_file('lua/mods.xml')
 
 func _draw():
 	draw_string(font, Vector2(20, 72), text, color)
