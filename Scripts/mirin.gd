@@ -212,12 +212,11 @@ func save_to_file(file):
 		actor_index += 1
 	var joined_file: PoolStringArray = PoolStringArray(split_file)
 	modfile = joined_file.join('\n')
-	print(modfile)
 	
-#	var f = File.new()
-#	f.open(proj_path + '/' + file, File.WRITE)
-#	f.store_string(modfile)
-#	f.close()
+	var f = File.new()
+	f.open(proj_path + '/' + file, File.WRITE)
+	f.store_string(modfile)
+	f.close()
 
 func print_string(string: String):
 	for letter in string:
