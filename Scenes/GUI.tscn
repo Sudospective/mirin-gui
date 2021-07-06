@@ -1,0 +1,482 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/mirin.gd" type="Script" id=1]
+
+[sub_resource type="Theme" id=1]
+
+[node name="GUI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Workspace" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="FileBrowser" type="FileDialog" parent="Workspace"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = -240.0
+margin_right = 360.0
+margin_bottom = 240.0
+window_title = "Open a Directory"
+mode = 2
+access = 2
+current_dir = "/"
+current_path = "/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonNew" type="Button" parent="Workspace"]
+visible = false
+margin_right = 128.0
+margin_bottom = 36.0
+text = "New Project"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonOpen" type="Button" parent="Workspace"]
+margin_left = 128.0
+margin_right = 256.0
+margin_bottom = 36.0
+text = "Open Project"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Preview" type="ColorRect" parent="Workspace"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -320.0
+margin_top = -240.0
+margin_right = 320.0
+margin_bottom = 240.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="ModPanel" type="ColorRect" parent="Workspace"]
+anchor_left = 0.875
+anchor_top = 0.5
+anchor_right = 0.875
+anchor_bottom = 0.5
+margin_left = -120.0
+margin_top = -240.0
+margin_right = 120.0
+margin_bottom = 240.0
+color = Color( 0.313726, 0.313726, 0.313726, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelLabel" type="Label" parent="Workspace/ModPanel"]
+anchor_left = 0.5
+anchor_top = 0.1
+anchor_right = 0.5
+anchor_bottom = 0.1
+margin_left = -48.0
+margin_top = -16.0
+margin_right = 48.0
+margin_bottom = 16.0
+text = "Mod Settings"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TypeLabel" type="Label" parent="Workspace/ModPanel"]
+anchor_left = 0.5
+anchor_top = 0.2
+anchor_right = 0.5
+anchor_bottom = 0.2
+margin_left = -48.0
+margin_top = -16.0
+margin_right = 48.0
+margin_bottom = 16.0
+text = "Mod Type"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModType" type="OptionButton" parent="Workspace/ModPanel"]
+anchor_left = 0.5
+anchor_top = 0.25
+anchor_right = 0.5
+anchor_bottom = 0.25
+margin_left = -48.0
+margin_top = -8.0
+margin_right = 48.0
+margin_bottom = 12.0
+theme = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SetPanel" type="Panel" parent="Workspace/ModPanel"]
+anchor_left = 0.5
+anchor_top = 0.475
+anchor_right = 0.5
+anchor_bottom = 0.475
+margin_left = -96.0
+margin_top = -64.0
+margin_right = 96.0
+margin_bottom = 64.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartLabel" type="Label" parent="Workspace/ModPanel/SetPanel"]
+anchor_left = 0.5
+anchor_top = 0.35
+anchor_right = 0.5
+anchor_bottom = 0.35
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+text = "Start Beat"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModStart" type="SpinBox" parent="Workspace/ModPanel/SetPanel"]
+anchor_left = 0.5
+anchor_top = 0.65
+anchor_right = 0.5
+anchor_bottom = 0.65
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EasePanel" type="Panel" parent="Workspace/ModPanel"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.475
+anchor_right = 0.5
+anchor_bottom = 0.475
+margin_left = -96.0
+margin_top = -64.0
+margin_right = 96.0
+margin_bottom = 64.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartLabel" type="Label" parent="Workspace/ModPanel/EasePanel"]
+anchor_left = 0.25
+anchor_top = 0.2
+anchor_right = 0.25
+anchor_bottom = 0.2
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+text = "Start Beat"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModStart" type="SpinBox" parent="Workspace/ModPanel/EasePanel"]
+anchor_left = 0.25
+anchor_top = 0.4
+anchor_right = 0.25
+anchor_bottom = 0.4
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LengthLabel" type="Label" parent="Workspace/ModPanel/EasePanel"]
+anchor_left = 0.75
+anchor_top = 0.2
+anchor_right = 0.75
+anchor_bottom = 0.2
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+text = "Length"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModLength" type="SpinBox" parent="Workspace/ModPanel/EasePanel"]
+anchor_left = 0.75
+anchor_top = 0.4
+anchor_right = 0.75
+anchor_bottom = 0.4
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EaseLabel" type="Label" parent="Workspace/ModPanel/EasePanel"]
+anchor_left = 0.3
+anchor_top = 0.6
+anchor_right = 0.3
+anchor_bottom = 0.6
+margin_left = -48.0
+margin_top = -12.0
+margin_right = 48.0
+margin_bottom = 12.0
+text = "Ease Function"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModEase" type="OptionButton" parent="Workspace/ModPanel/EasePanel"]
+anchor_left = 0.3
+anchor_top = 0.8
+anchor_right = 0.3
+anchor_bottom = 0.8
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 38.0
+margin_bottom = 12.0
+
+[node name="CheckBox" type="CheckBox" parent="Workspace/ModPanel/EasePanel"]
+anchor_left = 0.725
+anchor_top = 0.75
+anchor_right = 0.725
+anchor_bottom = 0.75
+margin_left = -24.0
+margin_top = -12.0
+margin_right = 24.0
+margin_bottom = 12.0
+disabled = true
+text = "Flip"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AddPanel" type="Panel" parent="Workspace/ModPanel"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.475
+anchor_right = 0.5
+anchor_bottom = 0.475
+margin_left = -96.0
+margin_top = -64.0
+margin_right = 96.0
+margin_bottom = 64.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartLabel" type="Label" parent="Workspace/ModPanel/AddPanel"]
+anchor_left = 0.25
+anchor_top = 0.2
+anchor_right = 0.25
+anchor_bottom = 0.2
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+text = "Start Beat"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModStart" type="SpinBox" parent="Workspace/ModPanel/AddPanel"]
+anchor_left = 0.25
+anchor_top = 0.4
+anchor_right = 0.25
+anchor_bottom = 0.4
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LengthLabel" type="Label" parent="Workspace/ModPanel/AddPanel"]
+anchor_left = 0.75
+anchor_top = 0.2
+anchor_right = 0.75
+anchor_bottom = 0.2
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+text = "Length"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModLength" type="SpinBox" parent="Workspace/ModPanel/AddPanel"]
+anchor_left = 0.75
+anchor_top = 0.4
+anchor_right = 0.75
+anchor_bottom = 0.4
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 36.0
+margin_bottom = 12.0
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EaseLabel" type="Label" parent="Workspace/ModPanel/AddPanel"]
+anchor_left = 0.3
+anchor_top = 0.6
+anchor_right = 0.3
+anchor_bottom = 0.6
+margin_left = -48.0
+margin_top = -12.0
+margin_right = 48.0
+margin_bottom = 12.0
+text = "Ease Function"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModEase" type="OptionButton" parent="Workspace/ModPanel/AddPanel"]
+anchor_left = 0.3
+anchor_top = 0.8
+anchor_right = 0.3
+anchor_bottom = 0.8
+margin_left = -36.0
+margin_top = -12.0
+margin_right = 38.0
+margin_bottom = 12.0
+
+[node name="CheckBox" type="CheckBox" parent="Workspace/ModPanel/AddPanel"]
+anchor_left = 0.725
+anchor_top = 0.75
+anchor_right = 0.725
+anchor_bottom = 0.75
+margin_left = -24.0
+margin_top = -12.0
+margin_right = 24.0
+margin_bottom = 12.0
+disabled = true
+text = "Flip"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NameLabel" type="Label" parent="Workspace/ModPanel"]
+anchor_left = 0.25
+anchor_top = 0.7
+anchor_right = 0.25
+anchor_bottom = 0.7
+margin_left = -48.0
+margin_top = -16.0
+margin_right = 48.0
+margin_bottom = 16.0
+text = "Mod"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModName" type="LineEdit" parent="Workspace/ModPanel"]
+anchor_left = 0.25
+anchor_top = 0.75
+anchor_right = 0.25
+anchor_bottom = 0.75
+margin_left = -48.0
+margin_top = -12.0
+margin_right = 48.0
+margin_bottom = 12.0
+
+[node name="PercLabel" type="Label" parent="Workspace/ModPanel"]
+anchor_left = 0.75
+anchor_top = 0.7
+anchor_right = 0.75
+anchor_bottom = 0.7
+margin_left = -48.0
+margin_top = -16.0
+margin_right = 48.0
+margin_bottom = 16.0
+text = "Percent"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ModPerc" type="SpinBox" parent="Workspace/ModPanel"]
+anchor_left = 0.75
+anchor_top = 0.75
+anchor_right = 0.75
+anchor_bottom = 0.75
+margin_left = -48.0
+margin_top = -12.0
+margin_right = 48.0
+margin_bottom = 12.0
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+
+[node name="ModInsert" type="Button" parent="Workspace/ModPanel"]
+anchor_left = 0.5
+anchor_top = 0.9
+anchor_right = 0.5
+anchor_bottom = 0.9
+margin_left = -48.0
+margin_top = -16.0
+margin_right = 48.0
+margin_bottom = 16.0
+text = "Insert Mod"
+__meta__ = {
+"_edit_use_anchors_": false
+}
